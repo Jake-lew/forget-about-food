@@ -33,10 +33,7 @@ export function Navbar() {
           </div>
           <div className="hidden sm:block">
             <span className="font-bold text-[#3C271A] font-serif text-lg leading-none">
-              Forget About
-            </span>
-            <span className="block text-xs text-[#D96B3D] font-medium leading-none">
-              Food
+              Forget About Food
             </span>
           </div>
         </Link>

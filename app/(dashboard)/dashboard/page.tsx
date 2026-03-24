@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [uncheckedCount, setUncheckedCount] = useState(0);
   const [prefs, setPrefs] = useState<{weekly_budget: number} | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState("");
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -48,10 +49,23 @@ export default function DashboardPage() {
 
   const generatePlan = async () => {
     setGenerating(true);
+    setGenerateError("");
     try {
       const resp = await fetch("/api/generate-meal-plan", { method: "POST" });
-      if (resp.ok) { await loadData(); }
-    } catch (e) { console.error(e); }
+      if (resp.ok) {
+        await loadData();
+      } else {
+        const body = await resp.json().catch(() => ({}));
+        if (resp.status === 400 && body.error?.includes("onboarding")) {
+          window.location.href = "/onboarding";
+        } else {
+          setGenerateError(body.error || "Something went wrong. Please try again.");
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      setGenerateError("Network error. Please check your connection and try again.");
+    }
     setGenerating(false);
   };
 
@@ -99,6 +113,17 @@ export default function DashboardPage() {
           </div>
         ))}
       </div>
+
+      {/* Error banner */}
+      {generateError && (
+        <div className="mb-6 px-5 py-4 rounded-2xl text-sm flex items-start gap-3" style={{ backgroundColor: "#FEE2E2", color: "#991B1B" }}>
+          <span className="text-lg">⚠️</span>
+          <div>
+            <p className="font-semibold mb-0.5">Couldn't generate meal plan</p>
+            <p>{generateError}</p>
+          </div>
+        </div>
+      )}
 
       {/* Main actions */}
       {!activePlan ? (
