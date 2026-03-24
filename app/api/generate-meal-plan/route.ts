@@ -2,6 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 
+// Extend Vercel function timeout to 60 seconds (max on Hobby plan)
+export const maxDuration = 60;
+
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST() {
@@ -84,7 +87,7 @@ DISLIKED MEALS (never include): ${dislikedMeals.slice(0,10).join(", ") || "none 
 
 PREFERRED STORES: ${prefs.preferred_stores?.join(", ") || "any"}
 
-For EACH meal slot, provide 2-3 recipe options so the user can choose what appeals to them that week.
+For EACH meal slot, provide exactly 2 recipe options: one recommended and one alternative.
 
 Return this exact JSON structure:
 {
@@ -161,8 +164,8 @@ Important:
 
   try {
     const message = await anthropic.messages.create({
-      model: "claude-opus-4-6",
-      max_tokens: 16000,
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 8000,
       messages: [{ role: "user", content: userPrompt }],
       system: systemPrompt,
     });
