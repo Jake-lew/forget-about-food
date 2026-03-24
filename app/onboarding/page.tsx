@@ -70,15 +70,18 @@ export default function OnboardingPage() {
   const back = () => setStep((s) => Math.max(s - 1, 0));
   const progress = ((step) / (STEPS.length - 1)) * 100;
 
+  const [saveError, setSaveError] = useState("");
+
   const save = async () => {
     setSaving(true);
+    setSaveError("");
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/login"); return; }
 
     const stores = [...data.preferred_stores, ...(data.custom_store ? [data.custom_store] : [])];
     const disliked = data.disliked_ingredients.split(",").map(s => s.trim()).filter(Boolean);
 
-    await supabase.from("user_preferences").upsert({
+    const { error: prefsError } = await supabase.from("user_preferences").upsert({
       user_id: user.id,
       household_size: data.household_size,
       weekly_budget: data.weekly_budget,
@@ -99,6 +102,12 @@ export default function OnboardingPage() {
       plan_dinner: data.plan_dinner,
       plan_snacks: data.plan_snacks,
     });
+
+    if (prefsError) {
+      setSaveError("Couldn't save your preferences. Please try again.");
+      setSaving(false);
+      return;
+    }
 
     await supabase.from("profiles").update({
       onboarding_completed: true,
@@ -178,7 +187,7 @@ export default function OnboardingPage() {
                   <label className="block text-sm font-medium mb-2" style={{ color: "#3C271A" }}>Weekly grocery budget</label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium" style={{ color: "#AD7B54" }}>$</span>
-                    <input type="number" value={data.weekly_budget} onChange={e => setData(d => ({...d, weekly_budget: +e.target.value}))} className="w-full pl-8 py-3 rounded-xl border outline-none text-sm" style={inputStyle} min={20} max={1000} />
+                    <input type="number" value={data.weekly_budget} onChange={e => setData(d => ({...d, weekly_budget: +e.target.value}))} className="w-full rounded-xl border outline-none text-sm" style={{...inputStyle, paddingLeft: "2.25rem"}} min={20} max={1000} />
                   </div>
                   <p className="text-xs mt-1" style={{ color: "#AD7B54" }}>Suggested: $75–$200/week for {data.household_size} {data.household_size === 1 ? "person" : "people"}</p>
                 </div>
@@ -338,6 +347,13 @@ export default function OnboardingPage() {
               </div>
             )}
           </div>
+
+          {/* Save error */}
+          {saveError && (
+            <div className="mt-4 px-4 py-3 rounded-xl text-sm" style={{ backgroundColor: "#FEE2E2", color: "#991B1B" }}>
+              ⚠️ {saveError}
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="flex items-center justify-between mt-8">

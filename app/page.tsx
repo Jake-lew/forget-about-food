@@ -1,165 +1,178 @@
 import Link from "next/link";
 
-const features = [
-  { emoji: "🤖", title: "AI-Powered Meal Planning", desc: "Claude AI generates a personalized weekly menu based on your taste, budget, equipment, and time—so you never have to think about what to cook." },
-  { emoji: "🛒", title: "Smart Shopping Lists", desc: "Automatically organized by store and aisle. Checks against your pantry, avoids duplicates, and tracks your actual spend vs. budget." },
-  { emoji: "⏱️", title: "Time-Aware Planning", desc: "Set weekday vs. weekend cook-time limits. We plan meals that fit your schedule—including batch prep sessions." },
-  { emoji: "🫙", title: "Pantry Intelligence", desc: "Tell us what you have. We'll use it first, saving you money and reducing waste every single week." },
-  { emoji: "📧", title: "Email & Text Delivery", desc: "Get your beautiful meal plan and shopping list delivered to your inbox and phone every week—before your shopping day." },
-  { emoji: "📊", title: "Budget Tracking", desc: "Set a weekly food budget. We plan within it, show estimated costs per meal, and learn from your actual spending over time." },
-];
-
-const howItWorks = [
-  { step: "1", title: "Tell us about yourself", desc: "Dietary needs, allergies, equipment, budget, favorite cuisines, and the stores you shop at." },
-  { step: "2", title: "We plan your week", desc: "AI generates a full weekly menu—breakfast, lunch, dinner, snacks—tailored entirely to you." },
-  { step: "3", title: "Get your shopping list", desc: "A smart, organized list lands in your inbox and on your phone before your shopping day." },
-  { step: "4", title: "Cook, eat, repeat", desc: "Rate meals, update your pantry, and we get smarter every week. Your plan keeps improving." },
-];
-
 export default function LandingPage() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FDF8F0" }}>
-      {/* Header */}
-      <header style={{ backgroundColor: "rgba(255,253,249,0.92)", backdropFilter: "blur(8px)", borderBottom: "1px solid #F0E4D7" }} className="fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm" style={{ backgroundColor: "#D96B3D" }}>
-              <span className="text-lg">🍽️</span>
+    <div className="min-h-screen" style={{ backgroundColor: "#FDF8F0", fontFamily: "'Inter', sans-serif" }}>
+
+      {/* ── NAV ── */}
+      <header style={{ backgroundColor: "rgba(253,248,240,0.92)", backdropFilter: "blur(12px)", borderBottom: "1px solid #EDD9C8", position: "fixed", top: 0, left: 0, right: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 1.5rem", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "#D96B3D", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(217,107,61,0.35)" }}>
+              <span style={{ fontSize: "17px" }}>🍽️</span>
             </div>
-            <span className="font-bold text-lg" style={{ color: "#3C271A", fontFamily: "'Playfair Display', serif" }}>
-              Forget About Food
-            </span>
+            <span style={{ fontWeight: 700, fontSize: "17px", color: "#3C271A", fontFamily: "'Playfair Display', serif" }}>Forget About Food</span>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm font-medium transition-colors" style={{ color: "#72492C" }}>
-              Sign in
-            </Link>
-            <Link href="/signup" className="text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors shadow-sm" style={{ backgroundColor: "#D96B3D" }}>
-              Get started free
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <Link href="/login" style={{ fontSize: "14px", fontWeight: 500, color: "#72492C", textDecoration: "none" }}>Sign in</Link>
+            <Link href="/signup" style={{ fontSize: "14px", fontWeight: 600, color: "#fff", backgroundColor: "#D96B3D", padding: "9px 20px", borderRadius: "10px", textDecoration: "none", boxShadow: "0 2px 8px rgba(217,107,61,0.4)" }}>
+              Start free →
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="pt-32 pb-24 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 text-sm font-medium px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: "#FAE5DB", color: "#9E4226" }}>
-            <span>✨</span> AI-powered meal planning
+      {/* ── HERO ── */}
+      <section style={{ paddingTop: "140px", paddingBottom: "100px", paddingLeft: "1.5rem", paddingRight: "1.5rem", textAlign: "center" }}>
+        <div style={{ maxWidth: "780px", margin: "0 auto" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "13px", fontWeight: 600, color: "#9E4226", backgroundColor: "#FAE5DB", padding: "6px 14px", borderRadius: "100px", marginBottom: "28px", letterSpacing: "0.02em" }}>
+            ✦ AI-Powered Meal Planning
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6" style={{ color: "#3C271A", fontFamily: "'Playfair Display', serif" }}>
-            Stop wondering{" "}
-            <span className="italic" style={{ background: "linear-gradient(135deg, #D96B3D, #F59E0B)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              what&apos;s for dinner.
-            </span>
+          <h1 style={{ fontSize: "clamp(2.6rem, 6vw, 4.5rem)", fontWeight: 800, lineHeight: 1.1, color: "#3C271A", fontFamily: "'Playfair Display', serif", marginBottom: "24px" }}>
+            Stop dreading<br />
+            <span style={{ color: "#D96B3D" }}>"what's for dinner?"</span>
           </h1>
-          <p className="text-xl max-w-2xl mx-auto leading-relaxed mb-10" style={{ color: "#72492C" }}>
-            Forget About Food plans your entire week of meals, builds your shopping list, tracks your budget,
-            and delivers it all to your inbox — automatically.
+          <p style={{ fontSize: "1.2rem", color: "#72492C", lineHeight: 1.7, maxWidth: "560px", margin: "0 auto 40px" }}>
+            Forget About Food plans your entire week — breakfast, lunch, dinner — builds your shopping list, and delivers it to your inbox. All you do is cook.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup" className="text-white text-lg font-semibold px-8 py-4 rounded-2xl transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2 justify-center" style={{ backgroundColor: "#D96B3D" }}>
-              Start planning for free <span>→</span>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+            <Link href="/signup" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "17px", fontWeight: 700, color: "#fff", backgroundColor: "#D96B3D", padding: "16px 36px", borderRadius: "14px", textDecoration: "none", boxShadow: "0 4px 20px rgba(217,107,61,0.45)" }}>
+              ✨ Get my first meal plan free
             </Link>
-            <Link href="/login" className="text-lg font-medium px-8 py-4 rounded-2xl transition-all inline-flex items-center gap-2 justify-center" style={{ border: "2px solid #F0E4D7", color: "#72492C", backgroundColor: "#FFFDF9" }}>
-              Sign in
-            </Link>
+            <p style={{ fontSize: "13px", color: "#AD7B54" }}>No credit card · Ready in 3 minutes</p>
           </div>
-          <p className="mt-6 text-sm" style={{ color: "#AD7B54" }}>
-            Free to start · No credit card required · Takes 3 minutes to set up
-          </p>
         </div>
-      </section>
 
-      {/* Meal Plan Preview Mockup */}
-      <section className="px-6 pb-24">
-        <div className="max-w-5xl mx-auto">
-          <div className="rounded-3xl border overflow-hidden shadow-2xl" style={{ backgroundColor: "#FFFDF9", borderColor: "#F0E4D7" }}>
-            <div className="px-8 py-6" style={{ backgroundColor: "#D96B3D" }}>
-              <div className="flex items-center justify-between text-white">
-                <div>
-                  <p className="text-sm" style={{ opacity: 0.8 }}>Week of March 23 – 29</p>
-                  <h3 className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>Your Meal Plan 🍽️</h3>
+        {/* App preview card */}
+        <div style={{ maxWidth: "900px", margin: "72px auto 0", borderRadius: "24px", overflow: "hidden", boxShadow: "0 24px 80px rgba(60,39,26,0.12), 0 4px 16px rgba(60,39,26,0.08)", border: "1px solid #EDD9C8" }}>
+          <div style={{ backgroundColor: "#FFFDF9", padding: "20px 24px", borderBottom: "1px solid #F0E4D7", display: "flex", alignItems: "center", gap: "8px" }}>
+            {["#FF6058","#FFBC2E","#28CA41"].map(c => <div key={c} style={{ width: "12px", height: "12px", borderRadius: "50%", backgroundColor: c }} />)}
+            <span style={{ fontSize: "13px", color: "#AD7B54", marginLeft: "8px" }}>forget-about-food.vercel.app/dashboard</span>
+          </div>
+          <div style={{ backgroundColor: "#FAF5EE", padding: "32px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
+            {[
+              { day: "Monday", meals: ["🥣 Overnight Oats", "🥗 Grain Bowl", "🍝 Pasta Primavera"], cost: "$12" },
+              { day: "Tuesday", meals: ["🍳 Veggie Scramble", "🥙 Turkey Wrap", "🌮 Fish Tacos"], cost: "$14" },
+              { day: "Wednesday", meals: ["🫐 Smoothie Bowl", "♻️ Leftover Tacos", "🍛 Chicken Curry"], cost: "$16" },
+            ].map(({ day, meals, cost }) => (
+              <div key={day} style={{ backgroundColor: "#FFFDF9", borderRadius: "14px", padding: "16px", border: "1px solid #EDD9C8" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: "#3C271A" }}>{day}</span>
+                  <span style={{ fontSize: "11px", color: "#5A8A56", fontWeight: 600, backgroundColor: "#E8F3E7", padding: "2px 8px", borderRadius: "100px" }}>{cost}</span>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm" style={{ opacity: 0.8 }}>Est. budget</p>
-                  <p className="text-2xl font-bold">$87.40</p>
-                </div>
-              </div>
-            </div>
-            <div className="p-8">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  { day: "Monday", meals: [["🌅 Breakfast","Greek Yogurt Parfait 🫐"],["☀️ Lunch","Leftover pasta 🍝"],["🌙 Dinner","Lemon Herb Chicken 🍋"]] },
-                  { day: "Tuesday", meals: [["🌅 Breakfast","Avocado Toast 🥑"],["☀️ Lunch","Chicken Salad Wrap 🌯"],["🌙 Dinner","Shrimp Stir Fry 🍤"]] },
-                  { day: "Wednesday", meals: [["🌅 Breakfast","Overnight Oats 🌾"],["☀️ Lunch","Leftover stir fry 🥢"],["🌙 Dinner","Homemade Pizza 🍕"]] },
-                ].map((d) => (
-                  <div key={d.day} className="rounded-2xl p-4" style={{ backgroundColor: "#FAF0DE" }}>
-                    <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: "#D96B3D" }}>{d.day}</p>
-                    {d.meals.map(([label, meal]) => (
-                      <div key={label} className="mb-2 last:mb-0">
-                        <p className="text-xs" style={{ color: "#AD7B54" }}>{label}</p>
-                        <p className="text-sm font-medium" style={{ color: "#3C271A" }}>{meal}</p>
-                      </div>
-                    ))}
-                  </div>
+                {meals.map(m => (
+                  <div key={m} style={{ fontSize: "12px", color: "#72492C", padding: "6px 10px", backgroundColor: "#FAF0DE", borderRadius: "8px", marginBottom: "6px" }}>{m}</div>
                 ))}
               </div>
-              <div className="mt-6 pt-5 flex items-center justify-between" style={{ borderTop: "1px solid #F0E4D7" }}>
-                <div className="flex items-center gap-6">
-                  {[["34 items","Grocery items"],["2h Sunday","Prep time"],["8 items ✓","Pantry used"]].map(([val, lbl]) => (
-                    <div key={lbl}>
-                      <p className="text-xs" style={{ color: "#AD7B54" }}>{lbl}</p>
-                      <p className="text-lg font-bold" style={{ color: "#3C271A" }}>{val}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="text-white text-sm font-medium px-5 py-2.5 rounded-xl hidden sm:block" style={{ backgroundColor: "#D96B3D" }}>
-                  View shopping list →
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="px-6 py-24" style={{ backgroundColor: "#FAF0DE" }}>
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#3C271A", fontFamily: "'Playfair Display', serif" }}>
-              Everything you need to eat well
+      {/* ── PAIN POINTS ── */}
+      <section style={{ backgroundColor: "#3C271A", padding: "96px 1.5rem" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <p style={{ fontSize: "13px", fontWeight: 600, color: "#D96B3D", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "16px" }}>Sound familiar?</p>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, color: "#FDF8F0", fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>
+              The weekly dinner struggle is real
             </h2>
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: "#72492C" }}>Built around the way real people actually cook, shop, and eat.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f) => (
-              <div key={f.title} className="rounded-2xl p-6 border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg" style={{ backgroundColor: "#FFFDF9", borderColor: "#F0E4D7" }}>
-                <div className="text-3xl mb-4">{f.emoji}</div>
-                <h3 className="text-lg font-semibold mb-2" style={{ color: "#3C271A", fontFamily: "'Playfair Display', serif" }}>{f.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#72492C" }}>{f.desc}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>
+            {[
+              { emoji: "😩", title: "The 6pm panic", desc: "It's dinnertime. You're staring into the fridge. Nobody can agree. You order takeout again and feel guilty about it." },
+              { emoji: "🛒", title: "The wasted grocery run", desc: "You bought ingredients for meals you never made. That wilted spinach, the half-used jar of tahini... $40 in the bin." },
+              { emoji: "🔁", title: "The same 5 meals forever", desc: "Spaghetti Monday. Taco Tuesday. You're out of ideas. Everyone at the table is bored but you don't know what else to make." },
+              { emoji: "💸", title: "The budget mystery", desc: "You spend more than you planned, but you're not sure where the money went. Groceries feel like a guessing game every week." },
+            ].map(({ emoji, title, desc }) => (
+              <div key={title} style={{ backgroundColor: "rgba(255,255,255,0.05)", borderRadius: "16px", padding: "28px", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <span style={{ fontSize: "2rem", display: "block", marginBottom: "14px" }}>{emoji}</span>
+                <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#FDF8F0", marginBottom: "8px" }}>{title}</h3>
+                <p style={{ fontSize: "14px", color: "#C4A882", lineHeight: 1.6 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: "56px" }}>
+            <p style={{ fontSize: "1.3rem", color: "#FDF8F0", fontFamily: "'Playfair Display', serif", fontStyle: "italic", opacity: 0.9 }}>
+              "There has to be a better way."
+            </p>
+            <p style={{ fontSize: "14px", color: "#AD7B54", marginTop: "8px" }}>There is.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SOLUTION ── */}
+      <section style={{ padding: "100px 1.5rem", backgroundColor: "#FDF8F0" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
+          <p style={{ fontSize: "13px", fontWeight: 600, color: "#D96B3D", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "16px" }}>The solution</p>
+          <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, color: "#3C271A", fontFamily: "'Playfair Display', serif", marginBottom: "20px", lineHeight: 1.2 }}>
+            Your personal chef,<br />powered by AI
+          </h2>
+          <p style={{ fontSize: "1.1rem", color: "#72492C", maxWidth: "540px", margin: "0 auto 72px", lineHeight: 1.7 }}>
+            Tell us your taste, budget, and schedule once. Every week, we plan every meal, build your shopping list, and send it to you — without you lifting a finger.
+          </p>
+
+          {/* How it works steps */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px", textAlign: "left" }}>
+            {[
+              { num: "01", title: "You tell us about yourself", desc: "Your household size, budget, allergies, cuisines you love, kitchen equipment, and how much time you have to cook." },
+              { num: "02", title: "AI plans your entire week", desc: "Claude AI builds a personalized menu — breakfast through dinner — with 2–3 recipe options per meal slot so you stay in control." },
+              { num: "03", title: "Your shopping list is ready", desc: "Consolidated, sorted by store and aisle, with pantry items auto-checked. Lands in your inbox before your shopping day." },
+              { num: "04", title: "It gets smarter every week", desc: "Rate meals you loved or hated. Update your pantry. The AI learns your preferences and improves your plan automatically." },
+            ].map(({ num, title, desc }) => (
+              <div key={num} style={{ backgroundColor: "#FFFDF9", borderRadius: "16px", padding: "28px", border: "1px solid #EDD9C8" }}>
+                <span style={{ fontSize: "12px", fontWeight: 800, color: "#D96B3D", letterSpacing: "0.08em", display: "block", marginBottom: "12px" }}>{num}</span>
+                <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#3C271A", marginBottom: "8px", lineHeight: 1.3 }}>{title}</h3>
+                <p style={{ fontSize: "13px", color: "#72492C", lineHeight: 1.6 }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="px-6 py-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#3C271A", fontFamily: "'Playfair Display', serif" }}>How it works</h2>
-            <p className="text-lg" style={{ color: "#72492C" }}>Set up once. Let it run every week.</p>
+      {/* ── FEATURES ── */}
+      <section style={{ backgroundColor: "#FAF0DE", padding: "100px 1.5rem" }}>
+        <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <p style={{ fontSize: "13px", fontWeight: 600, color: "#D96B3D", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "16px" }}>Everything included</p>
+            <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, color: "#3C271A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>
+              Built for real families,<br />real budgets, real kitchens
+            </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {howItWorks.map((s) => (
-              <div key={s.step} className="flex gap-5">
-                <div className="flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "#FAE5DB" }}>
-                  <span className="text-xl font-bold" style={{ color: "#D96B3D", fontFamily: "'Playfair Display', serif" }}>{s.step}</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1.5" style={{ color: "#3C271A", fontFamily: "'Playfair Display', serif" }}>{s.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "#72492C" }}>{s.desc}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
+            {[
+              { icon: "🤖", title: "Truly personalized AI", desc: "Not generic meal suggestions. Plans built around your exact dietary needs, allergies, disliked ingredients, and favorite cuisines." },
+              { icon: "💰", title: "Budget-aware planning", desc: "Set your weekly grocery budget and we'll plan within it. See estimated costs per meal and track spending over time." },
+              { icon: "⏱️", title: "Time-smart scheduling", desc: "Different time limits for weekdays and weekends. 20-minute weeknight meals and leisurely Sunday roasts — we handle both." },
+              { icon: "🫙", title: "Pantry intelligence", desc: "Log what you have and we'll use it first. Reduce waste, save money, and never buy something you already own." },
+              { icon: "♻️", title: "Leftovers & meal prep", desc: "Cook once, eat twice. We plan dinners that become next-day lunches and batch-cooking sessions that set you up for the week." },
+              { icon: "📧", title: "Weekly delivery", desc: "A beautiful email with your full plan and a text with your shopping list — arrives before your shopping day, every week." },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} style={{ backgroundColor: "#FFFDF9", borderRadius: "16px", padding: "28px", border: "1px solid #EDD9C8", display: "flex", flexDirection: "column", gap: "12px" }}>
+                <span style={{ fontSize: "2rem" }}>{icon}</span>
+                <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#3C271A", margin: 0 }}>{title}</h3>
+                <p style={{ fontSize: "14px", color: "#72492C", lineHeight: 1.6, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SOCIAL PROOF ── */}
+      <section style={{ backgroundColor: "#FDF8F0", padding: "100px 1.5rem" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <p style={{ textAlign: "center", fontSize: "13px", fontWeight: 600, color: "#D96B3D", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "48px" }}>What people are saying</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>
+            {[
+              { quote: "I used to spend Sunday mornings stressed about the week ahead. Now I wake up, my plan is in my inbox, and I feel completely in control.", name: "Sarah M.", detail: "Mom of 3 · Chicago" },
+              { quote: "We've cut our grocery bill by almost $80 a month. The pantry tracking alone is worth it — we actually use what we buy now.", name: "Marcus T.", detail: "Couple · Austin" },
+              { quote: "As someone with celiac disease and a nut allergy, finding meal plans I can actually use felt impossible. This just works.", name: "Priya K.", detail: "Single professional · NYC" },
+            ].map(({ quote, name, detail }) => (
+              <div key={name} style={{ backgroundColor: "#FFFDF9", borderRadius: "16px", padding: "28px 28px 24px", border: "1px solid #EDD9C8" }}>
+                <p style={{ fontSize: "14px", color: "#3C271A", lineHeight: 1.7, marginBottom: "20px", fontStyle: "italic" }}>"{quote}"</p>
+                <div style={{ borderTop: "1px solid #F0E4D7", paddingTop: "16px" }}>
+                  <p style={{ fontSize: "14px", fontWeight: 700, color: "#3C271A", margin: 0 }}>{name}</p>
+                  <p style={{ fontSize: "12px", color: "#AD7B54", margin: "2px 0 0" }}>{detail}</p>
                 </div>
               </div>
             ))}
@@ -167,35 +180,40 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-6 py-24" style={{ backgroundColor: "#D96B3D" }}>
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+      {/* ── CTA ── */}
+      <section style={{ backgroundColor: "#D96B3D", padding: "96px 1.5rem", textAlign: "center" }}>
+        <div style={{ maxWidth: "640px", margin: "0 auto" }}>
+          <h2 style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 800, color: "#fff", fontFamily: "'Playfair Display', serif", lineHeight: 1.2, marginBottom: "20px" }}>
             Ready to forget about food?
           </h2>
-          <p className="text-lg mb-8" style={{ color: "#FAE5DB" }}>
-            Join thousands of people who&apos;ve taken the stress out of meal planning.
+          <p style={{ fontSize: "1.1rem", color: "rgba(255,255,255,0.85)", marginBottom: "40px", lineHeight: 1.6 }}>
+            Set up takes 3 minutes. Your first meal plan is waiting on the other side.
           </p>
-          <Link href="/signup" className="font-semibold text-lg px-8 py-4 rounded-2xl transition-colors shadow-lg inline-flex items-center gap-2" style={{ backgroundColor: "white", color: "#D96B3D" }}>
-            Get started free <span>→</span>
+          <Link href="/signup" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "17px", fontWeight: 700, color: "#D96B3D", backgroundColor: "#fff", padding: "16px 40px", borderRadius: "14px", textDecoration: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
+            ✨ Get started — it&apos;s free
           </Link>
+          <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", marginTop: "16px" }}>No credit card required · Cancel anytime</p>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="px-6 py-12" style={{ backgroundColor: "#3C271A" }}>
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🍽️</span>
-            <span className="font-bold text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>Forget About Food</span>
+      {/* ── FOOTER ── */}
+      <footer style={{ backgroundColor: "#3C271A", padding: "40px 1.5rem" }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{ width: "30px", height: "30px", borderRadius: "8px", backgroundColor: "#D96B3D", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: "14px" }}>🍽️</span>
+            </div>
+            <span style={{ fontWeight: 700, fontSize: "15px", color: "#FDF8F0", fontFamily: "'Playfair Display', serif" }}>Forget About Food</span>
           </div>
-          <p className="text-sm" style={{ color: "#AD7B54" }}>© {new Date().getFullYear()} Forget About Food. Made with 🧡 for home cooks everywhere.</p>
-          <div className="flex gap-4 text-sm" style={{ color: "#AD7B54" }}>
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+          <p style={{ fontSize: "13px", color: "#7A5C45" }}>© 2025 Forget About Food. All rights reserved.</p>
+          <div style={{ display: "flex", gap: "24px" }}>
+            {["Privacy", "Terms", "Contact"].map(link => (
+              <Link key={link} href="#" style={{ fontSize: "13px", color: "#7A5C45", textDecoration: "none" }}>{link}</Link>
+            ))}
           </div>
         </div>
       </footer>
+
     </div>
   );
 }
