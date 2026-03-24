@@ -87,80 +87,49 @@ DISLIKED MEALS (never include): ${dislikedMeals.slice(0,10).join(", ") || "none 
 
 PREFERRED STORES: ${prefs.preferred_stores?.join(", ") || "any"}
 
-For EACH meal slot, provide exactly 2 recipe options: one recommended and one alternative.
-
-Return this exact JSON structure:
+Return this exact JSON structure (keep it compact — no step-by-step instructions, no detailed ingredient lists):
 {
   "week_start": "${weekStartStr}",
   "week_end": "${weekEndStr}",
   "total_estimated_cost": 0.00,
-  "notes": "Brief overview of the week's plan and any meal prep session details",
-  "meal_prep_sessions": [
-    {
-      "day": "sunday",
-      "duration_minutes": 90,
-      "meals_prepped": ["Meal 1", "Meal 2"],
-      "instructions": ["Step 1", "Step 2"]
-    }
-  ],
+  "notes": "Brief 1-2 sentence overview of the week",
   "meals": [
     {
       "day": "monday",
       "meal_type": "breakfast",
-      "options": [
-        {
-          "meal_name": "Recipe Name",
-          "description": "1-2 sentence description",
-          "servings": ${prefs.household_size},
-          "prep_time": 10,
-          "cook_time": 20,
-          "estimated_cost": 8.50,
-          "calories_per_serving": 450,
-          "cuisine_type": "American",
-          "equipment_needed": ["oven"],
-          "is_meal_prep": false,
-          "is_leftover": false,
-          "ingredients": [
-            {
-              "name": "chicken breast",
-              "quantity": "2",
-              "unit": "lbs",
-              "estimated_cost": 8.00,
-              "category": "meat_seafood",
-              "store_section": "Meat & Seafood"
-            }
-          ],
-          "instructions": [
-            "Preheat oven to 400°F",
-            "Season chicken with salt, pepper, and herbs",
-            "Bake for 20-25 minutes until cooked through"
-          ]
-        }
-      ]
+      "meal_name": "Recipe Name",
+      "description": "1-2 sentence description",
+      "servings": ${prefs.household_size},
+      "prep_time": 10,
+      "cook_time": 20,
+      "estimated_cost": 8.50,
+      "calories_per_serving": 450,
+      "cuisine_type": "American",
+      "is_meal_prep": false,
+      "is_leftover": false,
+      "key_ingredients": ["ingredient 1", "ingredient 2", "ingredient 3"]
     }
   ],
   "shopping_items": [
     {
       "name": "chicken breast",
-      "quantity": "2",
-      "unit": "lbs",
+      "quantity": "2 lbs",
       "category": "meat_seafood",
       "store_section": "Meat & Seafood",
       "estimated_cost": 8.00,
-      "preferred_store": "${prefs.preferred_stores?.[0] || ""}",
-      "meal_names": ["Recipe Name 1", "Recipe Name 2"],
+      "meal_names": ["Recipe Name"],
       "in_pantry": false
     }
   ]
 }
 
 Important:
-- Each meal must have 2-3 recipe options in the "options" array
-- The first option should be the recommended one
-- Shopping items should be consolidated (don't list chicken twice)
-- Mark in_pantry: true for items from the user's pantry list
-- Total estimated_cost should be sum of all non-pantry shopping items
-- For leftovers meals: set is_leftover: true and note the source meal`;
+- ONE meal object per slot (no options array)
+- key_ingredients: max 5 items as plain strings
+- Shopping items consolidated (don't list chicken twice)
+- Mark in_pantry: true for pantry items
+- Total estimated_cost = sum of non-pantry shopping items
+- For leftover meals: set is_leftover: true`;
 
   try {
     const message = await anthropic.messages.create({
@@ -200,52 +169,40 @@ Important:
 
     if (planError || !mealPlan) throw new Error("Failed to save meal plan");
 
-    // Save planned meals — we save the first (recommended) option as the default
-    // but store all options as JSON in instructions for reference
-    const mealsToInsert = generatedPlan.meals.flatMap((mealSlot: {
+    // Save planned meals
+    const mealsToInsert = generatedPlan.meals.map((meal: {
       day: string;
       meal_type: string;
-      options: Array<{
-        meal_name: string;
-        description?: string;
-        servings: number;
-        prep_time: number;
-        cook_time: number;
-        estimated_cost: number;
-        calories_per_serving?: number;
-        is_meal_prep?: boolean;
-        is_leftover?: boolean;
-        ingredients?: unknown[];
-        instructions?: string[];
-        cuisine_type?: string;
-        equipment_needed?: string[];
-      }>;
-    }) => {
-      const primary = mealSlot.options[0];
-      return {
-        meal_plan_id: mealPlan.id,
-        user_id: user.id,
-        day: mealSlot.day,
-        meal_type: mealSlot.meal_type,
-        meal_name: primary.meal_name,
-        description: primary.description || "",
-        servings: primary.servings,
-        prep_time: primary.prep_time,
-        cook_time: primary.cook_time,
-        estimated_cost: primary.estimated_cost,
-        calories_per_serving: primary.calories_per_serving || null,
-        is_meal_prep: primary.is_meal_prep || false,
-        is_leftover: primary.is_leftover || false,
-        ingredients: primary.ingredients || [],
-        // Store all options in instructions field as a special marker
-        instructions: [
-          "__OPTIONS__:" + JSON.stringify(mealSlot.options),
-          ...(primary.instructions || []),
-        ],
-        cuisine_type: primary.cuisine_type || null,
-        equipment_needed: primary.equipment_needed || [],
-      };
-    });
+      meal_name: string;
+      description?: string;
+      servings: number;
+      prep_time: number;
+      cook_time: number;
+      estimated_cost: number;
+      calories_per_serving?: number;
+      is_meal_prep?: boolean;
+      is_leftover?: boolean;
+      key_ingredients?: string[];
+      cuisine_type?: string;
+    }) => ({
+      meal_plan_id: mealPlan.id,
+      user_id: user.id,
+      day: meal.day,
+      meal_type: meal.meal_type,
+      meal_name: meal.meal_name,
+      description: meal.description || "",
+      servings: meal.servings,
+      prep_time: meal.prep_time,
+      cook_time: meal.cook_time,
+      estimated_cost: meal.estimated_cost,
+      calories_per_serving: meal.calories_per_serving || null,
+      is_meal_prep: meal.is_meal_prep || false,
+      is_leftover: meal.is_leftover || false,
+      ingredients: meal.key_ingredients?.map((name: string) => ({ name })) || [],
+      instructions: [],
+      cuisine_type: meal.cuisine_type || null,
+      equipment_needed: [],
+    }));
 
     if (mealsToInsert.length > 0) {
       await supabase.from("planned_meals").insert(mealsToInsert);
@@ -271,11 +228,9 @@ Important:
       const itemsToInsert = generatedPlan.shopping_items.map((item: {
         name: string;
         quantity?: string;
-        unit?: string;
         category?: string;
         store_section?: string;
         estimated_cost?: number;
-        preferred_store?: string;
         meal_names?: string[];
         in_pantry?: boolean;
       }) => ({
@@ -283,14 +238,14 @@ Important:
         user_id: user.id,
         name: item.name,
         quantity: item.quantity || "",
-        unit: item.unit || "",
+        unit: "",
         category: item.category || "other",
         store_section: item.store_section || "",
         estimated_cost: item.estimated_cost || 0,
-        preferred_store: item.preferred_store || null,
+        preferred_store: null,
         meal_names: item.meal_names || [],
         in_pantry: item.in_pantry || false,
-        checked: item.in_pantry || false, // auto-check pantry items
+        checked: item.in_pantry || false,
       }));
 
       await supabase.from("shopping_items").insert(itemsToInsert);
