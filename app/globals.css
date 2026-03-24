@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --color-bg: #FDF8F0;
+  --color-surface: #FFFDF9;
+  --color-border: #F0E4D7;
+  --color-text-primary: #3C271A;
+  --color-text-secondary: #72492C;
+  --color-text-muted: #AD7B54;
+  --color-primary: #D96B3D;
+  --color-primary-hover: #C05530;
+  --color-primary-light: #FAE5DB;
+  --color-sage: #5A8A56;
+  --color-sage-light: #E2EDE1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  line-height: 1.25;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: #DDB99A; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C05530; }
+
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: #FAE5DB;
+  color: var(--color-text-primary);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #D96B3D, #F59E0B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #F0E4D7 25%, #FAF0DE 50%, #F0E4D7 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 0.5rem;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
