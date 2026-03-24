@@ -58,7 +58,7 @@ CRITICAL RULES:
 - For meal prep mode: plan a dedicated prep session (usually Sunday/Saturday)
 - For leftovers: plan dinner portions that cover next day's lunch
 
-OUTPUT FORMAT: Return a single valid JSON object. No markdown, no code blocks, just the JSON.`;
+OUTPUT FORMAT: Your entire response must be ONLY a valid JSON object. Do not include any text before or after the JSON. Do not use markdown code blocks. Do not add any explanation. Start your response with { and end with }.`;
 
   const userPrompt = `Create a complete weekly meal plan with the following requirements:
 
@@ -175,10 +175,12 @@ Important:
 
     let generatedPlan;
     try {
-      // Extract JSON if wrapped in markdown
-      const jsonText = content.text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      generatedPlan = JSON.parse(jsonText);
-    } catch {
+      // Extract JSON - find the outermost { ... } block regardless of surrounding text
+      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error("No JSON object found in response");
+      generatedPlan = JSON.parse(jsonMatch[0]);
+    } catch (parseErr) {
+      console.error("Parse error. Raw response:", content.text.slice(0, 500));
       throw new Error("Failed to parse AI response as JSON");
     }
 
