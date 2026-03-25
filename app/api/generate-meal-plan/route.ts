@@ -149,8 +149,11 @@ Important:
       if (!jsonMatch) throw new Error("No JSON object found in response");
       generatedPlan = JSON.parse(jsonMatch[0]);
     } catch (parseErr) {
-      console.error("Parse error. Raw response:", content.text.slice(0, 500));
-      throw new Error("Failed to parse AI response as JSON");
+      // Temporarily expose raw response for debugging
+      return NextResponse.json(
+        { error: "Parse failed", raw: content.text.slice(0, 3000), parseErr: String(parseErr) },
+        { status: 500 }
+      );
     }
 
     // Save meal plan to database
