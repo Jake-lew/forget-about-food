@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { jsonrepair } from "jsonrepair";
 
 // Extend Vercel function timeout to 60 seconds (max on Hobby plan)
 export const maxDuration = 60;
@@ -144,16 +145,21 @@ Important:
 
     let generatedPlan;
     try {
-      // Extract JSON - find the outermost { ... } block regardless of surrounding text
-      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+      // Strip markdown code fences if present
+      const stripped = content.text
+        .replace(/^```json\s*/m, "")
+        .replace(/^```\s*/m, "")
+        .replace(/```\s*$/m, "")
+        .trim();
+      // Extract the outermost JSON object
+      const jsonMatch = stripped.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error("No JSON object found in response");
-      generatedPlan = JSON.parse(jsonMatch[0]);
+      // Use jsonrepair to fix any minor syntax errors the model made
+      const repaired = jsonrepair(jsonMatch[0]);
+      generatedPlan = JSON.parse(repaired);
     } catch (parseErr) {
-      // Temporarily expose raw response for debugging
-      return NextResponse.json(
-        { error: "Parse failed", raw: content.text.slice(0, 3000), parseErr: String(parseErr) },
-        { status: 500 }
-      );
+      console.error("Parse error:", String(parseErr));
+      throw new Error("Failed to parse AI response as JSON");
     }
 
     // Save meal plan to database
