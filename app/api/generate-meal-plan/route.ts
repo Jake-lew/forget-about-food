@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { jsonrepair } from "jsonrepair";
+import { getRegenLimit, getCurrentWeekOf, PlanTier } from "@/lib/stripe";
 
 // Extend Vercel function timeout to 60 seconds (max on Hobby plan)
 export const maxDuration = 60;
@@ -13,6 +14,40 @@ export async function POST() {
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Check subscription tier and regeneration limits
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("subscription_tier, is_superadmin, trial_ends_at")
+    .eq("id", user.id)
+    .single();
+
+  const tier = (profile?.subscription_tier || "starter") as PlanTier;
+  const isSuperadmin = profile?.is_superadmin || false;
+  const isTrialing = profile?.trial_ends_at && new Date(profile.trial_ends_at) > new Date();
+
+  // Superadmins and active trials bypass limits
+  if (!isSuperadmin && !isTrialing) {
+    const weekOf = getCurrentWeekOf();
+    const limit = getRegenLimit(tier);
+
+    if (limit !== Infinity) {
+      const { data: usage } = await supabase
+        .from("usage_tracking")
+        .select("meal_plan_regenerations")
+        .eq("user_id", user.id)
+        .eq("week_of", weekOf)
+        .maybeSingle();
+
+      const used = usage?.meal_plan_regenerations || 0;
+      if (used >= limit) {
+        return NextResponse.json(
+          { error: "limit_reached", used, limit, tier },
+          { status: 403 }
+        );
+      }
+    }
+  }
 
   // Load user preferences, pantry, and meal history
   const [{ data: prefs }, { data: pantry }, { data: history }] = await Promise.all([
@@ -260,8 +295,28 @@ Important:
       await supabase.from("shopping_items").insert(itemsToInsert);
     }
 
+    // Increment usage counter (skip for superadmins and trialing users)
+    if (!isSuperadmin && !isTrialing && getRegenLimit(tier) !== Infinity) {
+      const weekOf = getCurrentWeekOf();
+      const { data: existingUsage } = await supabase
+        .from("usage_tracking")
+        .select("id, meal_plan_regenerations")
+        .eq("user_id", user.id)
+        .eq("week_of", weekOf)
+        .maybeSingle();
+      if (existingUsage) {
+        await supabase.from("usage_tracking")
+          .update({ meal_plan_regenerations: existingUsage.meal_plan_regenerations + 1 })
+          .eq("id", existingUsage.id);
+      } else {
+        await supabase.from("usage_tracking")
+          .insert({ user_id: user.id, week_of: weekOf, meal_plan_regenerations: 1 });
+      }
+    }
+
     // Send notification email/SMS if enabled
-    const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+    const { data: profileData } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+    const profile = profileData;
     if (profile?.email_notifications) {
       await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/send-notification`, {
         method: "POST",
