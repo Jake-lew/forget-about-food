@@ -343,7 +343,7 @@ export default function DashboardPage() {
       )}
 
       {/* Manage subscription link */}
-      {profile?.subscription_tier !== "starter" || profile?.stripe_customer_id ? null : (
+      {profile?.subscription_tier === "starter" ? (
         <div style={{ marginTop: "32px", paddingTop: "24px", borderTop: "1px solid #E8D5C4", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <p style={{ fontSize: "13px", color: "#AD7B54" }}>
             On the {TIER_NAMES[tier]} plan &middot; {effectiveLimit === Infinity ? "Unlimited" : `${regenRemaining} of ${effectiveLimit}`} generations remaining this week
