@@ -352,7 +352,7 @@ export default function DashboardPage() {
             View plans
           </Link>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
