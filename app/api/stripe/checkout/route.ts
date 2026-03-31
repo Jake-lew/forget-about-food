@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { stripe, PLANS, PlanTier } from "@/lib/stripe";
+import { getStripeClient, PLANS, PlanTier } from "@/lib/stripe";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   let customerId = profile?.stripe_customer_id;
 
   if (!customerId) {
-    const customer = await stripe.customers.create({
+    const customer = await getStripeClient().customers.create({
       email: user.email,
       name: profile?.full_name || undefined,
       metadata: { supabase_user_id: user.id },
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://forget-about-food.vercel.app";
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripeClient().checkout.sessions.create({
     customer: customerId,
     mode: "subscription",
     payment_method_types: ["card"],

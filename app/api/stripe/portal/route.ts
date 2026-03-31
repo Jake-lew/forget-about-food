@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { stripe } from "@/lib/stripe";
+import { getStripeClient } from "@/lib/stripe";
 import { NextResponse } from "next/server";
 
 export async function POST() {
@@ -18,7 +18,7 @@ export async function POST() {
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://forget-about-food.vercel.app";
-  const session = await stripe.billingPortal.sessions.create({
+  const session = await getStripeClient().billingPortal.sessions.create({
     customer: profile.stripe_customer_id,
     return_url: `${appUrl}/dashboard`,
   });
